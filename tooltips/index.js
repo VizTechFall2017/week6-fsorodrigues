@@ -14,6 +14,10 @@ var scaleX = d3.scalePoint().domain(["16-19", "20-24", "25-34", "35-44", "45-54"
 //scaleLinear is like the class example with the ruler; it takes any value on an interval (0-1200) and gives them new values (400-0)
 var scaleY = d3.scaleLinear().domain([0,1200]).range([400, 0]);  //remember that 0,0 is at the top of the screen! 300 is the lowest value on the y axis
 
+// var div = d3.select("body")
+//              .append("div")
+//              .attr("class", "tooltip")
+//              .style("opacity", 0);
 
 // Add the x Axis - must use .call to actually add it to a DOM element (almost always a group)
 svg.append("g")
@@ -77,7 +81,29 @@ d3.csv('./incomeDataAllYears.csv', function(dataIn){
         .append('circle')
         .attr('class','w_dataPoints')
         .attr('r', 5)
-        .attr('fill', "lime");
+        .attr('fill', "lime")
+        .attr('data-toggle', 'tooltip')
+        .attr('title', function(d) {
+            return d.women;
+        });
+
+        //d3 tooltip version
+        // .on("mouseover", function(d) {
+        //
+        //   div.transition()
+        //       .duration(200)
+        //       .style("opacity", 0.9)
+        //
+        //   div.html(d.women)
+        //       .style("left", d3.event.pageX + "px")
+        //       .style("top", (d3.event.pageY - 28) + "px")
+        // })
+        // .on("mouseout", function(d) {
+        //
+        //   div.transition()
+        //       .duration(500)
+        //       .style("opacity", 0)
+        // });
 
     svg.selectAll('circles')
         .data(data2016)
@@ -85,7 +111,13 @@ d3.csv('./incomeDataAllYears.csv', function(dataIn){
         .append('circle')
         .attr('class','m_dataPoints')
         .attr('r', 5)
-        .attr('fill', "blue");
+        .attr('fill', "blue")
+        .attr('data-toggle', 'tooltip')
+        .attr('title', function(d) {
+            return d.men;
+        });
+
+        $('[data-toggle="tooltip"]').tooltip();
 
     //call the drawPoints function below, and hand it the data2016 variable with the 2016 object array in it
     drawPoints(data2016);

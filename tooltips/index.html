@@ -3,7 +3,12 @@
 <head>
     <title>Load from CSV</title>
 
+    <link rel="stylesheet" type="text/css" href="bootstrap.css">
     <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script src="./jquery-3.2.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="./bootstrap.js"></script>
     <script src="./d3.v4.2.6.min.js"></script>
 
 </head>
@@ -11,9 +16,6 @@
 <body>
 
     <input type="range" min="2000" max="2016" value="1" class="slider" id="mySlider" oninput="sliderMoved(value)" >
-
-
-    <br>
 
     <svg width="800px" height="600px"></svg>
 

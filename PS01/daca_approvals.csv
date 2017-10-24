@@ -1,4 +1,5 @@
 data_origin,calendar_year,fiscal_year,months,month,_month,date,quarter,initial_intake,initial_approval,initial_cumulative,renewal_intake,renewal_approval
+blalba,2018,2018,Jan-Mar,Mar,3,1/1/2012,Q2,,,0,,
 uscis,2012,2012,Jul-Sep,Sep,9,9/1/2012,Q4,146450,1707,1707,0,0
 uscis,2012,2013,Oct-Dec,Dec,12,12/1/2012,Q1,221453,101258,102965,0,0
 uscis,2013,2013,Jan-Mar,Mar,3,3/1/2013,Q2,78779,119566,222531,0,0
@@ -18,7 +19,8 @@ uscis,2016,2016,Apr-Jun,Jun,6,6/1/2016,Q3,20796,13332,697479,65369,15313
 uscis,2016,2016,Jul-Sep,Sep,9,9/1/2016,Q4,15864,12616,710095,64285,62302
 uscis,2016,2017,Oct-Dec,Dec,12,12/1/2016,Q1,15207,18429,728524,99120,103792
 uscis,2017,2017,Jan-Mar,Mar,3,3/1/2017,Q2,10368,17275,745799,141682,107524
-uscis,2017,2017,Apr-Jun,Jun,6,6/1/2017,Q3,10809,5860,751659,92343,96708
-projection,2017,2017,Jul-Sep,Sep,9,6/1/2017,Q4,,,751659,,
-projection,2017,2018,Oct-Dec,Dec,12,12/1/2017,Q1,,,751659,,
-projection,2018,2018,Jan-Mar,Mar,3,1/1/2018,Q2,,,0,,
+uscis,2017,2017,Apr-Jun,Jun,6,9/1/2017,Q3,10809,5860,751659,92343,96708
+projection,2017,2017,Jul-Sep,Sep,9,9/1/2017,Q4,,,751659,,
+projection,2017,2018,Oct-Dec,Dec,12,3/1/2018,Q1,,,751659,,
+projection,2018,2018,Jan-Mar,Mar,3,3/1/2018,Q2,,,0,,
+blalba,2018,2018,Jan-Mar,Mar,3,3/1/2019,Q2,,,0,,

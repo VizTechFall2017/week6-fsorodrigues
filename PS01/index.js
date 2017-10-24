@@ -22,20 +22,20 @@ scaleX = d3.scaleTime()
             .range([0, width - padding.right - padding.left]);
 
 var t = textures.lines()
-    .orientation("diagonal")
-    .size(40)
-    .strokeWidth(26)
-    .stroke("#282D48")
-    .background("firebrick");
-
+          .orientation("7/8", "7/8")
+          .size(10)
+          .strokeWidth(.25)
+          .stroke("#1F5869")
 svg.call(t);
+
+var formatComma = d3.format(",");
 
 d3.csv("./daca_approvals.csv", function(error, loadData) {
     if (error) { throw error };
 
     // parsing for number output
     loadData.forEach(function(d){
-        d.date = parseTime(d.date);
+        d.date = parsingTime(d.date);
         d.initial_intake = +d.initial_intake;
         d.initial_approval = +d.initial_approval;
         d.initial_cumulative = +d.initial_cumulative;
@@ -58,15 +58,15 @@ d3.csv("./daca_approvals.csv", function(error, loadData) {
 
     // drawing data area chart
     // drawArea(dataIn, "#d11919");
-    drawArea(dataIn, t.url());
-    drawLine(dataIn, "1,0");
+    drawArea(dataIn, "#1F5869");
+    drawLine(dataIn, "#1F5869" ,"1,0");
 
     //drawing projection area chart
-    drawArea(projection, "none")
-    drawLine(projection, "0.5,5");
+    drawArea(projection, t.url())
+    drawLine(projection, "#1F5869", "0.5,7");
 
     //drawing circles on data points
-    drawPlots(dataIn, "#282D48", 0);
+    drawPlots(dataIn, "#282D48");
 
     // calling title, subtitle and axis labels
     chartTitle();
@@ -74,54 +74,122 @@ d3.csv("./daca_approvals.csv", function(error, loadData) {
     // xLabel();
     yLabel();
 
+    window.setTimeout(drawAnnotation, 1200);
+
 });
 
-var parseTime = d3.timeParse("%m/%d/%Y");
+var parsingTime = d3.timeParse("%m/%d/%Y");
+
+function drawAnnotation() {
+
+  const type = d3.annotationCalloutCircle
+  const annotations = [{
+    note: { label: "On Sep 5, Attorney General Jeff Sessions announced the Trump administration would stop receiving work permit applications immediately and cancel the program in six months.", title: "The end of DACA", wrap: 200},
+    // data: { date: "9/1/2017", initial_cumulative: 751659 },
+    x: 1009, y: 130,
+    dy:15, dx: 100,
+    subject: { radius: 10, radiusPadding: 0 }
+  }]
+
+  // const parseTime = d3.timeParse("%b/%d/%Y")
+  // const timeFormat = d3.timeFormat("%d/%m/%Y")
+
+  const makeAnnotations = d3.annotation()
+    .type(type)
+    // accessors & accessorsInverse not needed
+    // if using x, y in annotations JSON
+    // .accessors({
+    //   x: d => scaleX(parseTime(d.date)),
+    //   y: d => scaleY(d.initial_cumulative)
+    // })
+    // .accessorsInverse({
+    //    date: d => timeFormat(scaleX.invert(d.scaleX)),
+    //    initial_cumulative: d => scaleY.invert(d.scaleY)
+    // })
+    .annotations(annotations)
+
+  d3.select("svg")
+    .append("g")
+    .attr("class", "annotation-group")
+    .call(makeAnnotations);
+};
 
 function drawArea(dataset, fill) {
+
+      var initialArea = d3.area()
+                           .x(0)
+                           .y0(height - 200)
+                           .y1(function(d) { return scaleY(d.initial_cumulative) });
 
       var area = d3.area()
                      .x(function(d) { return scaleX(d.date) })
                      .y0(height - 200)
                      .y1(function(d) { return scaleY(d.initial_cumulative) });
 
-      var appendArea = svg.append("path")
+      var appendArea = svg.append("g")
+                            .append("path")
                             .data([dataset])
                             .attr("class", "area")
                             .attr("fill", fill)
-                            .attr("opacity", .8)
+                            .attr("opacity", .5)
+                            .attr("d", initialArea)
+                             .transition()
+                             .duration(1000)
+                             .ease(d3.easeCubic)
                             .attr("d", area);
 
 };
 
-function drawLine(dataset, stroke) {
+function drawLine(dataset, stroke, dotted) {
+
+      var initialLine = d3.area()
+                           .x(0)
+                           .y0(height - 200)
+                           .y1(function(d) { return scaleY(d.initial_cumulative) });
 
       var valueline = d3.line()
                      .x(function(d) { return scaleX(d.date) })
                      .y(function(d) { return scaleY(d.initial_cumulative) });
 
-      var appendLine = svg.append("path")
+      var appendLine = svg.append("g")
+                            .append("path")
                             .data([dataset])
                             .attr("class", "line")
                             .attr("fill", "none")
-                            .attr("stroke", "#990000")
+                            .attr("stroke", stroke)
                             .attr("stroke-width", 2.5)
                             .style("stroke-linecap", "round")
-                            .style("stroke-dasharray", (stroke))
+                            .style("stroke-dasharray", (dotted))
                             .attr("opacity", 1)
+                            .attr("d", initialLine)
+                             .transition()
+                             .duration(1000)
+                             .ease(d3.easeCubic)
                             .attr("d", valueline);
 };
 
-function drawPlots(dataset, fill, radius) {
+function drawPlots(dataset, fill) {
 
     svg.selectAll("circle")
         .data(dataset)
         .enter()
         .append("circle")
-        .attr("cx", function(d) { return scaleX(d.date) })
+        .attr("opacity", 0)
         .attr("cy", function(d) { return scaleY(d.initial_cumulative) })
-        .attr("r", radius)
-        .attr("fill", fill);
+        .attr("fill", fill)
+        .attr('data-toggle', 'tooltip')
+        .attr('title', function(d) {
+            return "DACA requests approved: " + formatComma(d.initial_cumulative);
+        })
+        .attr("cx", 0)
+          .transition()
+          .duration(1000)
+          .ease(d3.easeSin)
+        .attr("cx", function(d) { return scaleX(d.date) })
+        .attr("r", 4)
+        ;
+
+        $('[data-toggle="tooltip"]').tooltip();
 };
 
 function getMaxY(dataset) {
